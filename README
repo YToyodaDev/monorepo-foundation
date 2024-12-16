@@ -1,0 +1,17 @@
+Git Commit
+
+2. Create apps
+
+- WEB & API
+  clean up unnesesarry default styles.
+  remove the git default directory from api
+  set web port to 3001
+  update api/dev command to 'dev'
+
+NOTE: The following settings has to be present globally or workspace, or pnpm cannot locate local module within the workspace.
+
+.npmrc file at root dirctory or at ~/ (where Desktop,Documents, Downloads, etc are located)
+
+link-workspace-packages = true
+prefer-workspace-packages = true
+recursive-install = true
