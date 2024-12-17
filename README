@@ -15,3 +15,17 @@ NOTE: The following settings has to be present globally or workspace, or pnpm ca
 link-workspace-packages = true
 prefer-workspace-packages = true
 recursive-install = true
+
+Move apps/api/.prettierrc to the root.(You only want to have one prettier config file in the workspace (personal preference )
+
+# Conflict (personal choice )
+
+.prettierrc
+
+{"semi": false}
+
+This above code will remove semi ';', which conflicts eslint config. If the warns arise, insert the following rule to .eslintrc.js or any eslint config file.
+
+'prettier/prettier': 'off',
+
+I would prefer to have semi because it imo makes it easier to scan code.
