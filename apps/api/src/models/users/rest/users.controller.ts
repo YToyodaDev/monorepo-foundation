@@ -29,22 +29,27 @@ import { checkRowLevelPermission } from 'src/common/auth/util';
 export class UsersController {
   constructor(private readonly prisma: PrismaService) {}
 
-  @AllowAuthenticated()
-  @ApiBearerAuth()
+  // @AllowAuthenticated()
+  // @ApiBearerAuth()
   @ApiCreatedResponse({ type: UserEntity })
   @Post()
   create(@Body() createUserDto: CreateUser, @GetUser() user: GetUserType) {
-    checkRowLevelPermission(user, createUserDto.uid);
+    // checkRowLevelPermission(user, createUserDto.uid);
     return this.prisma.user.create({ data: createUserDto });
   }
 
   @ApiOkResponse({ type: [UserEntity] })
   @Get()
-  findAll(@Query() { skip, take, order, sortBy }: UserQueryDto) {
+  findAll(
+    @Query() { skip, take, order, sortBy, search, searchBy }: UserQueryDto,
+  ) {
     return this.prisma.user.findMany({
       ...(skip ? { skip: +skip } : null),
       ...(take ? { take: +take } : null),
       ...(sortBy ? { orderBy: { [sortBy]: order || 'asc' } } : null),
+      ...(searchBy
+        ? { where: { [searchBy]: { contains: search, mode: 'insensitive' } } }
+        : null),
     });
   }
 
