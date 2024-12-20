@@ -67,7 +67,6 @@ export class UsersResolver {
 
     return this.usersService.findOne(args);
   }
-
   @AllowAuthenticated()
   @Mutation(() => User)
   async updateUser(

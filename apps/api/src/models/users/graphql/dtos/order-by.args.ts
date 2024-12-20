@@ -24,7 +24,7 @@ export class UserOrderByWithRelationInputStrict
   @Field(() => Prisma.SortOrder)
   image: Prisma.SortOrder;
 
-  // Todo: Add below field decorator to the SortOrder properties.
+  // Todo: Add below field decorator to the SortOrder properties. Or it will show "GraphQl cannot determine input type"
   // @Field(() => Prisma.SortOrder)
 }
 

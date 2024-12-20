@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -24,9 +25,30 @@ export class AuthGuard implements CanActivate {
     // 3. get req object similar to of HTTP
     const req = ctx.getContext().req;
     // 4. validate jwtToken and store the current user to the req object
+
+    if (this.bypassWithApiSecret(req)) {
+      return true;
+    }
+
     await this.authenticateUser(req);
     // 5.
     return this.authorizeUser(req, context);
+  }
+  private bypassWithApiSecret(req: any) {
+    const apiSecret = req.headers['x-api-secret'];
+    if (!apiSecret) {
+      return false;
+    }
+    if (apiSecret === process.env.INTERNAL_API_SECRET) {
+      req.user = {
+        uid: 1,
+        roles: ['admin', 'manager'],
+      };
+
+      return true;
+    } else {
+      throw new ForbiddenException('Nope.');
+    }
   }
   //
   private async authenticateUser(req: any): Promise<void> {
@@ -97,16 +119,20 @@ export class AuthGuard implements CanActivate {
   private async getUserRoles(uid: string): Promise<Role[]> {
     const roles: Role[] = [];
 
-    const [admin] = await Promise.all([
+    const [admin, manager] = await Promise.all([
       this.prisma.admin.findUnique({ where: { uid } }),
       // TODO: Add promises for other role models here
       // EXAMPLE
-      // this.prisma.manager.findUnique({ where: { uid } }),
+      this.prisma.manager.findUnique({ where: { uid } }),
     ]);
 
-    admin && roles.push('admin');
-    // TODO: Do not forget to puss roles  if you add more.
-    // manager && roles.push('manager');
+    if (admin) {
+      roles.push('admin');
+    }
+    if (manager) {
+      roles.push('manager');
+    }
+    // TODO: Do not forget to push a role to roles[]  if you add more.
 
     return roles;
   }
