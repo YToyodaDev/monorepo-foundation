@@ -18,7 +18,7 @@ export class UserWhereInputStrict
       UserWhereInputStrict,
       Omit<
         Prisma.UserWhereInput,
-        'Credentials' | 'AuthProvider' | 'Admin' | 'Manager'
+        'Credentials' | 'AuthProvider' | 'Admin' | 'Manager' | 'image'
       >
     >
 {
@@ -26,7 +26,6 @@ export class UserWhereInputStrict
   createdAt: DateTimeFilter;
   updatedAt: DateTimeFilter;
   name: StringFilter;
-  image: StringFilter;
 
   // Todo: Add the below field decorator only to the $Enums types.
   // @Field(() => $Enums.x)
