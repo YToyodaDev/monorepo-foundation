@@ -14,7 +14,7 @@ async function bootstrap() {
       `<h1>Looking for the GraphQL API?</h1>
     Go to <a href="/graphql" target="_blank">/graphql</a>.
     Or,
-    You might also need to use the <a target="_blank" href="https://studio.apollographql.com">Apollo Explorer for a better experience.</a>`,
+    You might also need to use the <a target="_blank" href="https://studio.apollographql.com/sandbox/explorer">Apollo Explorer for a better experience.</a>`,
     )
     .setVersion('0.1')
     .addBearerAuth()

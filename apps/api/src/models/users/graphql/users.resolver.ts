@@ -1,6 +1,13 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Parent,
+  ResolveField,
+} from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { User } from './entity/user.entity';
+import { AuthOutput, User } from './entity/user.entity';
 import { FindManyUserArgs, FindUniqueUserArgs } from './dtos/find.args';
 import {
   LoginInput,
@@ -13,6 +20,7 @@ import { checkRowLevelPermission } from 'src/common/auth/util';
 import { GetUserType } from 'src/common/types';
 import { AllowAuthenticated, GetUser } from 'src/common/auth/auth.decorator';
 import { PrismaService } from 'src/common/prisma/prisma.service';
+import { Item } from 'src/models/items/graphql/entity/item.entity';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -20,23 +28,40 @@ export class UsersResolver {
     private readonly usersService: UsersService,
     private readonly prisma: PrismaService,
   ) {}
-
-  @Mutation(() => User)
+  // This return type directly reflects in the selectable fields on Apollo sandbox. It does not throw error even if this resolver does not return the expected type.
+  // the name of the mutation that will be exposed in your GraphQL schema.
+  // @Args is the variable name, this does not have to match with the actual input type name
+  @Mutation(() => AuthOutput)
+  registerWithProvider(
+    @Args('registerWithProviderInput') args: RegisterWithProviderInput,
+  ): Promise<AuthOutput> {
+    try {
+      return this.usersService.registerWithProvider(args);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+  @Mutation(() => AuthOutput)
   async registerWithCredentials(
     @Args('registerWithCredentialsInput') args: RegisterWithCredentialsInput,
-  ) {
-    return this.usersService.registerWithCredentials(args);
-  }
-  @Mutation(() => User)
-  async registerWithProvider(
-    @Args('registerWithProvider') args: RegisterWithProviderInput,
-  ) {
-    return this.usersService.registerWithProvider(args);
+  ): Promise<AuthOutput> {
+    try {
+      return this.usersService.registerWithCredentials(args);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
-  @Mutation(() => LoginOutput)
-  async login(@Args('loginInput') args: LoginInput) {
-    return this.usersService.login(args);
+  @Mutation(() => AuthOutput)
+  async login(
+    @Args('loginInput')
+    args: LoginInput,
+  ) {
+    try {
+      return this.usersService.login(args);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
   @AllowAuthenticated()
   @Query(() => User)
@@ -55,7 +80,7 @@ export class UsersResolver {
   // }
   // @
 
-  @AllowAuthenticated('admin')
+  // @AllowAuthenticated('admin')
   @Query(() => [User], { name: 'users' })
   findAll(@Args() args: FindManyUserArgs) {
     return this.usersService.findAll(args);
@@ -89,5 +114,22 @@ export class UsersResolver {
     const userInfo = await this.prisma.user.findUnique(args);
     checkRowLevelPermission(user, userInfo.uid);
     return this.usersService.remove(args);
+  }
+  @ResolveField(() => [Item])
+  items(@Parent() parent: User) {
+    return this.prisma.item.findMany({
+      where: {
+        uid: parent.uid,
+      },
+    });
+  }
+  @ResolveField(() => String)
+  async email(@Parent() parent: User) {
+    const cred = await this.prisma.credentials.findUnique({
+      where: {
+        uid: parent.uid,
+      },
+    });
+    return cred.email;
   }
 }

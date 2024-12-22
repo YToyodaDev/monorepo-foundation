@@ -1,0 +1,61 @@
+query Item($where: ItemWhereUniqueInput!) {
+  item(where: $where) {
+    uid
+    name
+    updatedAt
+    id
+  }
+}
+mutation Login($loginInput: LoginInput!) {
+  login(loginInput: $loginInput) {
+    token
+    user {
+      name
+      image
+      uid
+      createdAt
+      updatedAt
+      email
+    }
+  }
+}
+
+mutation RegisterWithProvider(
+  $registerWithProviderInput: RegisterWithProviderInput!
+) {
+  registerWithProvider(registerWithProviderInput: $registerWithProviderInput) {
+    token
+    user {
+      name
+      image
+      uid
+      createdAt
+      updatedAt
+      email
+    }
+  }
+}
+mutation RegisterWithCredentials(
+  $registerWithCredentialsInput: RegisterWithCredentialsInput!
+) {
+  registerWithCredentials(
+    registerWithCredentialsInput: $registerWithCredentialsInput
+  ) {
+    token
+    user {
+      name
+      image
+      uid
+      createdAt
+      updatedAt
+    }
+  }
+}
+
+query User($where: UserWhereUniqueInput!) {
+  user(where: $where) {
+    uid
+    name
+    image
+  }
+}

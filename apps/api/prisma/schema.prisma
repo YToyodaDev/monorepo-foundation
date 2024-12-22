@@ -20,6 +20,7 @@ model User {
 
     Admin   Admin?
     Manager Manager?
+    Item    Item[]
 }
 
 model Admin {
@@ -59,14 +60,14 @@ enum AuthProviderType {
     CREDENTIALS
 }
 
-// model Item {
-//     id        Int      @id @default(autoincrement())
-//     createdAt DateTime @default(now())
-//     updatedAt DateTime @updatedAt
+model Item {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-//     name  String
-//     image String?
+    name  String
+    image String?
 
-//     uid String
-//     // user User   @relation(fields: [uid], references: [uid])
-// }
+    uid  String
+    user User   @relation(fields: [uid], references: [uid])
+}

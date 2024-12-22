@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { UsersModule } from './models/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ItemsModule } from './models/items/items.module';
 
 const maxAge = (Number(process.env.MAX_AGE) || 24) * 60 * 60;
 
@@ -35,7 +36,7 @@ const maxAge = (Number(process.env.MAX_AGE) || 24) * 60 * 60;
     }),
     PrismaModule,
     UsersModule,
-
+    ItemsModule,
     // PrismaModule: Registering a module with @Global() in any module makes it accessible application-wide. However, for clarity and convention, it's typically done in AppModule. Can you make  it even shorter?
   ],
   controllers: [AppController],

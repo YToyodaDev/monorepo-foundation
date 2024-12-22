@@ -3,11 +3,13 @@ import { ForbiddenException } from '@nestjs/common';
 
 /**
  * Implements Ownership-Based Access Control combined with Role-Based Access Control (RBAC).
- * Determines if a user has permission to access a specific record based on their user ID or assigned roles.
- * Returns true if the user's ID (uid) matches the requestedUid, either directly or indirectly, or if the user possesses a permitted role.
  *
- * @param {string} user.uid - The unique identifier of the user.
- * @param {string|string[]} [requestedUid] - The UID(s) associated with the User table, either directly or indirectly.
+ * The check will return `true` if:
+ * 1. The user is the owner of the resource (UID matches), OR
+ * 2. The user has a role included in the allowed roles array (default is ['admin']).
+ *
+ * @param {GetUserType} user - An object representing the user, consisting of a `uid` (unique identifier) and a `roles` array.
+ * @param {string|string[]} [requestedUid] - The UID(s) associated with the resource being accessed. The UID(s) are used to check if the user owns the resource.
  * @param {string[]} [roles=['admin']] - An array of roles permitted to access the record, bypassing the UID permission check. Defaults to ['admin'].
  * @returns {boolean} - Returns true if the user has permission; otherwise, throws a ForbiddenException.
  */
