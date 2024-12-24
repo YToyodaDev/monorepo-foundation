@@ -1,15 +1,13 @@
-import { Signout } from '@/components/Signout';
 import { getAuth } from '@foundation/network/src/auth/authOptions';
 import { add } from '@foundation/sample-lib';
-import Link from 'next/link';
+import { HomePage } from '@foundation/ui/src/components/templates/HomePage';
+
 export default async function Home() {
   const user = await getAuth();
-  console.log('user', user);
+  console.log('user ', user);
   return (
     <main>
-      Hello world {add(10, 12)}
-      <div></div>
-      {user?.user ? <Signout /> : <Link href="/signin">Sign In</Link>}
+      <HomePage />
     </main>
   );
 }

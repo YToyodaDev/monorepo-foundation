@@ -21,8 +21,9 @@ export class ItemWhereInputStrict
   createdAt: DateTimeFilter;
   updatedAt: DateTimeFilter;
   name: StringFilter;
-  image: StringFilter;
+  image: string;
   uid: StringFilter;
+
   user: UserRelationFilter;
 
   AND: ItemWhereInput[];

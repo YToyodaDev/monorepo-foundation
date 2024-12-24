@@ -45,6 +45,7 @@ export class StringFilter {
   @Field(() => Prisma.QueryMode)
   mode?: Prisma.QueryMode;
 }
+
 @InputType()
 export class StringListFilter {
   equals?: string[];
@@ -87,21 +88,6 @@ registerEnumType(Prisma.SortOrder, {
 @ObjectType()
 export class AggregateCountOutput {
   count: number;
-}
-
-@InputType()
-export class LocationFilterInput {
-  @Field(() => Float)
-  ne_lat: number;
-
-  @Field(() => Float)
-  ne_lng: number;
-
-  @Field(() => Float)
-  sw_lat: number;
-
-  @Field(() => Float)
-  sw_lng: number;
 }
 
 @ArgsType()

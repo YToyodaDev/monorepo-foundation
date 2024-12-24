@@ -71,7 +71,7 @@ input ItemWhereInput {
   createdAt: DateTimeFilter
   updatedAt: DateTimeFilter
   name: StringFilter
-  image: StringFilter
+  image: String
   uid: StringFilter
   user: UserRelationFilter
   AND: [ItemWhereInput!]
@@ -191,10 +191,10 @@ enum AuthProviderType {
 }
 
 input RegisterWithCredentialsInput {
-  name: String!
+  name: String
+  image: String
   email: String!
   password: String!
-  image: String
 }
 
 input LoginInput {

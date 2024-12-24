@@ -22,11 +22,13 @@
     "@graphql-codegen/typescript-operations": "^4.4.0",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@parcel/watcher": "^2.5.0",
+    "next": "^15.1.2",
     "next-auth": "^4.24.11",
     "typescript": "^5.7.2"
   },
   "peerDependencies": {
     "@parcel/watcher": "^2.5.0",
+    "next": "^15.1.2",
     "next-auth": "^4.24.11"
   }
 }

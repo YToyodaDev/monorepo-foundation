@@ -23,18 +23,21 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
 export const authOptions: NextAuthOptions = {
   providers: [
     // Google Provider Configuration
+    // called when you invoke signIn('google', { ... })
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
 
     // Credentials Provider Configuration
+    // called when you invoke signIn('credentials', { ... })
     CredentialsProvider({
-      name: 'Credentials',
+      name: 'Credentials', // optional, only relevant when built-in form is used.
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
+      // called when you invoke signIn('credentials', { ... })
       async authorize(credentials) {
         if (!credentials) return null;
 
@@ -50,12 +53,14 @@ export const authOptions: NextAuthOptions = {
 
         if (!data?.login || error) {
           console.error(`Authentication error: ${error}`);
+          // If you throw an Error, the user will be sent to the error page with the error message as a query parameter.
 
           throw new Error(
             'Authentication failed: Invalid credentials or user not found',
           );
         }
         const user = data.login.user;
+        // Any object returned will be saved in `user` property of the JWT
         return {
           id: user.uid,
           name: user.name,
@@ -66,6 +71,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   debug: true,
+  // Tells next-auth to use 'jwt'
   session: {
     strategy: 'jwt',
     maxAge: MAX_AGE,
@@ -73,7 +79,8 @@ export const authOptions: NextAuthOptions = {
 
   jwt: {
     maxAge: MAX_AGE,
-    // this secret comes from an environmental variable
+    // called after both authorize and signIn have been called
+    // this secret variable comes from an environmental variable NEXTAUTH_SECRET
     async encode({ token, secret }): Promise<string> {
       if (!token) {
         throw new Error('Token is undefined');
@@ -83,6 +90,7 @@ export const authOptions: NextAuthOptions = {
       const nowInSeconds = Math.floor(Date.now() / 1000);
       const expirationTimestamp = nowInSeconds + MAX_AGE;
 
+      // generates the JWT that gets stored as the next-auth.session-token
       return sign(
         {
           uid: sub,
@@ -94,6 +102,7 @@ export const authOptions: NextAuthOptions = {
         { algorithm: 'HS256' },
       );
     },
+    // Indirectly called by functions that need to interpret JWTs into a human-readable format, like useSession or getServerSession,
     async decode({ token, secret }): Promise<JWT | null> {
       if (!token) {
         throw new Error('Token is undefined');
@@ -111,6 +120,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   callbacks: {
+    // called after the user has been successfully authenticated (i.e., after the authorize function has returned a user object)
     async signIn({ user, account }) {
       if (account?.provider === 'google') {
         const { id, name, image } = user;
@@ -136,7 +146,7 @@ export const authOptions: NextAuthOptions = {
       }
       return true;
     },
-
+    // used to retrieve the session data (from the JWT) and modify the session object that is returned to the client.
     async session({ token, session }) {
       if (token) {
         session.user = {
@@ -149,8 +159,10 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  //Tells next-auth not to use the built-in form and where to fall back to in case a user is not authenticated
   pages: {
-    signIn: '/signIn',
+    signIn: '/sign-in',
   },
 };
+// getServerSession is functionally equivalent to the useSession hook on the client side,
 export const getAuth = () => getServerSession(authOptions);

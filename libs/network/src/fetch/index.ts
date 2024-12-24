@@ -9,6 +9,7 @@ export interface GraphqlRequestOptions<TData, V> {
   apiSecret?: string;
   url?: string;
 }
+
 export interface FetchResult<TData> {
   data?: TData;
   error?: string;
@@ -23,6 +24,7 @@ export async function fetchGraphqlStatic<TData, V>({
   url = process.env.NEXT_PUBLIC_API_URL + '/graphql',
 }: GraphqlRequestOptions<TData, V>): Promise<FetchResult<TData>> {
   const query = print(document);
+
   return await fetch(url, {
     method: 'POST',
     headers: {
@@ -35,7 +37,7 @@ export async function fetchGraphqlStatic<TData, V>({
   }).then(async (res) => {
     const { data, errors } = await res.json();
     if (errors) {
-      console.log('Error: ', JSON.stringify(errors));
+      console.log('Error', JSON.stringify(errors));
       return { error: JSON.stringify(errors[0].message) };
     }
     return { data };

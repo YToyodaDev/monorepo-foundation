@@ -4,7 +4,7 @@ import {
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { User as UserType, $Enums } from '@prisma/client';
+import { $Enums, User as UserType } from '@prisma/client';
 import { RestrictProperties } from 'src/common/dtos/common.input';
 
 registerEnumType($Enums.AuthProviderType, {

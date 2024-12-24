@@ -8,5 +8,19 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "next": "15.1.0",
+    "next-auth": "^4.24.11",
+    "react": "^19.0.0"
+  },
+  "peerDependencies": {
+    "next": "15.1.0",
+    "next-auth": "^4.24.11",
+    "react": "^19.0.0"
+  },
+  "dependencies": {
+    "@types/react": "^19.0.2",
+    "typescript": "^5.7.2"
+  }
 }

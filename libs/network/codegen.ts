@@ -1,5 +1,6 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 const documentsPattern = '**/*.graphql';
+
 const plugins = [
   'typescript',
   'typescript-operations',

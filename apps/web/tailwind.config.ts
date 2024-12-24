@@ -1,18 +1,10 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
+import uiTailwindConfig from '../../libs/ui/tailwind.config';
 
 export default {
+  presets: [uiTailwindConfig],
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
+    '../../libs/ui/src/**/*.{js,jsx,ts,tsx}',
   ],
-  theme: {
-    extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
-    },
-  },
-  plugins: [],
 } satisfies Config;

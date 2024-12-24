@@ -7,11 +7,9 @@ import {
   ResolveField,
 } from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { AuthOutput, User } from './entity/user.entity';
+import { AuthOutput, LoginInput, User } from './entity/user.entity';
 import { FindManyUserArgs, FindUniqueUserArgs } from './dtos/find.args';
 import {
-  LoginInput,
-  LoginOutput,
   RegisterWithCredentialsInput,
   RegisterWithProviderInput,
 } from './dtos/create-user.input';
@@ -72,15 +70,7 @@ export class UsersResolver {
       },
     });
   }
-  // @Mutation(() => User)
-  // async logout(
-  //   @Args('log') args: RegisterWithProviderInput,
-  // ) {
-  //   return this.usersService.logout(args);
-  // }
-  // @
 
-  // @AllowAuthenticated('admin')
   @Query(() => [User], { name: 'users' })
   findAll(@Args() args: FindManyUserArgs) {
     return this.usersService.findAll(args);

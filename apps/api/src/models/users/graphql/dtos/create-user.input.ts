@@ -24,20 +24,11 @@ export class RegisterWithProviderInput extends PickType(
 }
 
 @InputType()
-export class RegisterWithCredentialsInput {
-  name: string;
+export class RegisterWithCredentialsInput extends PickType(
+  User,
+  ['image', 'name'],
+  InputType,
+) {
   email: string;
   password: string;
-  image?: string;
-}
-
-@InputType()
-export class LoginInput extends PickType(RegisterWithCredentialsInput, [
-  'email',
-  'password',
-]) {}
-
-@ObjectType()
-export class LoginOutput {
-  token: string;
 }
